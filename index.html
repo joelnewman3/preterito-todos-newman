@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pretérito: Todas las Personas — Práctica Interactiva</title>
+  <style>
+    /* ==========================================================================
+       CSS VARIABLES & THEME TOKENS
+       Self-contained system typography & accessible classroom palette
+       ========================================================================== */
+    :root {
+      --bg-page: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-accent-btn: #eef2ff;
+      --bg-accent-btn-hover: #e0e7ff;
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --border-light: #e2e8f0;
+      --primary: #3b5bfd;
+      --primary-hover: #2b47e0;
+      --primary-light: #eef2ff;
+      --success: #0d9488;
+      --success-bg: #f0fdfa;
+      --success-border: #99f6e4;
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --warning-border: #fde68a;
+      --error: #dc2626;
+      --error-bg: #fef2f2;
+      --error-border: #fecaca;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.08);
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 8px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.45;
+      padding: 12px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* Compact container sized cleanly for Schoology iframes (~700px height) */
+    .app-container {
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       HEADER & SUBJECT FILTER TABS
+       ========================================================================== */
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .app-title-group h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .app-title-group p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .global-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-control {
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-control:hover {
+      border-color: var(--primary);
+      background-color: var(--bg-subtle);
+    }
+
+    .btn-control.active-mode {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Subject Filter Pills */
+    .filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .tab-btn {
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    /* ==========================================================================
+       ENGLISH STATISTICS DASHBOARD (4 CARDS)
+       ========================================================================== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .stat-value.highlight-primary {
+      color: var(--primary);
+    }
+
+    .stat-value.highlight-success {
+      color: var(--success);
+    }
+
+    .stat-sub {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      background-color: var(--border-light);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), #6366f1);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* ==========================================================================
+       MAIN FLASHCARD AREA
+       ========================================================================== */
+    .flashcard {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 18px 22px;
+      position: relative;
+      transition: border-color 0.2s ease;
+    }
+
+    .flashcard.state-correct {
+      border-color: var(--success);
+    }
+
+    .flashcard.state-incorrect {
+      border-color: var(--error);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-persona {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .badge-attempt {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .badge-attempt.first-try {
+      background-color: #f1f5f9;
+      color: var(--text-secondary);
+    }
+
+    .badge-attempt.retry {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid var(--warning-border);
+    }
+
+    .badge-attempt.mastered-first {
+      background-color: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success-border);
+    }
+
+    /* Sentence & Inline Fill-in-the-Blank Prompt */
+    .sentence-box {
+      font-size: 1.38rem;
+      font-weight: 500;
+      line-height: 1.85;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      text-align: center;
+      padding: 8px 4px;
+    }
+
+    .verb-infinitive {
+      display: inline-block;
+      font-weight: 700;
+      color: var(--primary);
+      background-color: var(--primary-light);
+      padding: 0 7px;
+      border-radius: 6px;
+      margin: 0 3px;
+      font-size: 1.25rem;
+    }
+
+    .inline-input {
+      font-family: inherit;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      background-color: var(--bg-subtle);
+      border: none;
+      border-bottom: 3px solid var(--primary);
+      border-radius: 6px 6px 0 0;
+      padding: 2px 10px;
+      width: 205px;
+      max-width: 90%;
+      text-align: center;
+      margin: 0 4px;
+      transition: all 0.15s ease;
+    }
+
+    .inline-input:focus {
+      outline: none;
+      background-color: #eef2ff;
+      border-bottom-color: var(--primary-hover);
+      box-shadow: 0 3px 10px rgba(59, 91, 253, 0.15);
+    }
+
+    .inline-input.input-correct {
+      background-color: var(--success-bg);
+      border-bottom-color: var(--success);
+      color: var(--success);
+    }
+
+    .inline-input.input-incorrect {
+      background-color: var(--error-bg);
+      border-bottom-color: var(--error);
+      color: var(--error);
+    }
+
+    /* ==========================================================================
+       SPANISH ACCENT-MARK HELPER BUTTONS
+       ========================================================================== */
+    .accent-toolbar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+
+    .accent-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .accent-btn {
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      min-width: 38px;
+      height: 36px;
+      padding: 0 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #c7d2fe;
+      background-color: var(--bg-accent-btn);
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .accent-btn:hover {
+      background-color: var(--bg-accent-btn-hover);
+      border-color: var(--primary);
+    }
+
+    .accent-btn:active {
+      transform: scale(0.94);
+    }
+
+    .accent-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       FEEDBACK BANNER
+       ========================================================================== */
+    .feedback-banner {
+      display: none;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .feedback-banner.visible {
+      display: block;
+    }
+
+    .feedback-banner.success {
+      background-color: var(--success-bg);
+      color: #0f766e;
+      border: 1px solid var(--success-border);
+    }
+
+    .feedback-banner.warning {
+      background-color: var(--warning-bg);
+      color: #b45309;
+      border: 1px solid var(--warning-border);
+    }
+
+    .feedback-banner.error {
+      background-color: var(--error-bg);
+      color: #b91c1c;
+      border: 1px solid var(--error-border);
+    }
+
+    .correct-answer-reveal {
+      display: inline-block;
+      font-weight: 800;
+      text-decoration: underline;
+      margin-left: 4px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       ACTION BUTTONS (CHECK / REVEAL / PREV / NEXT)
+       ========================================================================== */
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+      min-width: 135px;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: #ffffff;
+      min-width: 135px;
+    }
+
+    .btn-success:hover:not(:disabled) {
+      background-color: #0f766e;
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-subtle);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background-color: var(--border-light);
+    }
+
+    .keyboard-tip {
+      text-align: center;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    kbd {
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: inherit;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       END OF DECK SUMMARY SCREEN
+       ========================================================================== */
+    .summary-screen {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .summary-screen.visible {
+      display: block;
+    }
+
+    .summary-screen h2 {
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .summary-screen p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-size: 0.92rem;
+    }
+
+    .summary-score-ring {
+      width: 115px;
+      height: 115px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      border: 5px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .summary-score-ring .big-pct {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .summary-score-ring .ring-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .summary-breakdown {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .breakdown-pill {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE ADJUSTMENTS FOR MOBILE / COMPACT IFRAMES
+       ========================================================================== */
+    @media (max-width: 620px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sentence-box {
+        font-size: 1.15rem;
+        line-height: 1.85;
+      }
+
+      .inline-input {
+        font-size: 1.1rem;
+        width: 170px;
+      }
+
+      .flashcard {
+        padding: 16px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header & Global Controls -->
+    <header class="top-bar">
+      <div class="app-title-group">
+        <h1>Pretérito: Todas las Personas</h1>
+        <p>Type the correct preterite conjugation in the blank.</p>
+      </div>
+      <div class="global-actions">
+        <button type="button" id="btnShuffle" class="btn-control active-mode" title="Shuffle deck">
+          🔀 Shuffle: On
+        </button>
+        <button type="button" id="btnPracticeMissed" class="btn-control" style="display: none;" title="Practice cards missed on the first attempt">
+          🎯 Missed (<span id="missedCountBadge">0</span>)
+        </button>
+        <button type="button" id="btnReset" class="btn-control" title="Reset stats and progress">
+          ↺ Reset
+        </button>
+      </div>
+    </header>
+
+    <!-- Subject Filter Tabs -->
+    <nav class="filter-tabs" id="filterTabs" aria-label="Filter by subject pronoun">
+      <button type="button" class="tab-btn active" data-persona="ALL">All (200)</button>
+      <button type="button" class="tab-btn" data-persona="yo">yo (34)</button>
+      <button type="button" class="tab-btn" data-persona="tú">tú (34)</button>
+      <button type="button" class="tab-btn" data-persona="él/ella/Ud.">él/ella/Ud. (34)</button>
+      <button type="button" class="tab-btn" data-persona="ellos/ellas/Uds.">ellos/ellas/Uds. (66)</button>
+      <button type="button" class="tab-btn" data-persona="nosotros">nosotros (32)</button>
+    </nav>
+
+    <!-- Live Performance & First-Try Accuracy Stats (English) -->
+    <section class="stats-grid" aria-label="Progress statistics">
+      <div class="stat-card">
+        <div class="stat-label">Score on First Attempt</div>
+        <div class="stat-value highlight-primary" id="statFirstTryPct">—</div>
+        <div class="stat-sub" id="statFirstTryFraction">0 of 0 attempted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value" id="statCompleted">0 / 200</div>
+        <div class="stat-sub" id="statRemaining">200 remaining</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Current Streak</div>
+        <div class="stat-value highlight-success" id="statStreak">0</div>
+        <div class="stat-sub" id="statBestStreak">Best: 0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Actual Score</div>
+        <div class="stat-value" id="statActualScore">—</div>
+        <div class="stat-sub" id="statActualFraction">0 of 0 correct</div>
+      </div>
+    </section>
+
+    <!-- Visual Progress Bar -->
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBarTrack">
+      <div class="progress-fill" id="progressBarFill"></div>
+    </div>
+
+    <!-- Active Flashcard Interface -->
+    <main class="flashcard" id="flashcardBox">
+      <div class="card-meta">
+        <div class="meta-left">
+          <span class="badge-persona" id="cardPersonaBadge">Subject: yo</span>
+          <span id="cardCounterText">Card 1 of 200</span>
+        </div>
+        <span class="badge-attempt first-try" id="cardAttemptBadge">First Attempt</span>
+      </div>
+
+      <!-- Inline Fill-in-the-Blank Prompt -->
+      <div class="sentence-box" id="sentenceContainer">
+        <!-- Populated immediately on load with sentence + inline <input> + (infinitive) -->
+      </div>
+
+      <!-- Spanish Accent-Mark Helper Toolbar -->
+      <div class="accent-toolbar">
+        <div class="accent-buttons" role="group" aria-label="Insert Spanish accent marks">
+          <button type="button" class="accent-btn" data-char="á">á</button>
+          <button type="button" class="accent-btn" data-char="é">é</button>
+          <button type="button" class="accent-btn" data-char="í">í</button>
+          <button type="button" class="accent-btn" data-char="ó">ó</button>
+          <button type="button" class="accent-btn" data-char="ú">ú</button>
+          <button type="button" class="accent-btn" data-char="ü">ü</button>
+          <button type="button" class="accent-btn" data-char="ñ">ñ</button>
+        </div>
+        <span class="accent-hint">Click a button or press <kbd>Alt</kbd> + vowel/n to insert Spanish accents.</span>
+      </div>
+
+      <!-- Immediate Grading Feedback -->
+      <div class="feedback-banner" id="feedbackBanner" role="status" aria-live="polite"></div>
+
+      <!-- Card Controls -->
+      <div class="action-row">
+        <button type="button" class="btn btn-secondary" id="btnPrev">← Previous</button>
+        <button type="button" class="btn btn-primary" id="btnCheck">Check Answer</button>
+        <button type="button" class="btn btn-secondary" id="btnReveal">Show Answer</button>
+        <button type="button" class="btn btn-success" id="btnNext">Next →</button>
+      </div>
+
+      <div class="keyboard-tip">
+        Press <kbd>Enter</kbd> to check your answer and <kbd>Enter</kbd> again to advance to the next card.
+      </div>
+    </main>
+
+    <!-- End-of-Deck Summary View -->
+    <section class="summary-screen" id="summaryScreen">
+      <h2>Session Complete!</h2>
+      <p id="summarySubtitle">You have finished all cards in this set.</p>
+
+      <div class="summary-score-ring">
+        <span class="big-pct" id="summaryPct">0%</span>
+        <span class="ring-label">First Attempt</span>
+      </div>
+
+      <div class="summary-breakdown">
+        <div class="breakdown-pill" id="summaryFirstTryCount">✅ Correct on 1st attempt: 0</div>
+        <div class="breakdown-pill" id="summaryRetryCount">🔄 Needed extra attempts: 0</div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" id="btnSummaryPracticeMissed" style="display: none;">
+          🎯 Practice Missed Cards
+        </button>
+        <button type="button" class="btn btn-secondary" id="btnSummaryRestart">
+          ↺ Restart Full Deck
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * ==========================================================================
+     * COMPLETE DATASET: ALL 200 SPANISH PRETERITE FLASHCARDS
+     * Each entry contains: { id, persona, prompt, answer }
+     * ==========================================================================
+     */
+    const ALL_CARDS = [
+      // --- YO (1–34) ---
+      { id: 1, persona: "yo", prompt: "Ayer, yo _______ (buscar) mi cuaderno.", answer: "busqué" },
+      { id: 2, persona: "yo", prompt: "Después de la escuela, yo _______ (practicar) el piano.", answer: "practiqué" },
+      { id: 3, persona: "yo", prompt: "Al llegar a casa, yo _______ (sacar) los libros de mi mochila.", answer: "saqué" },
+      { id: 4, persona: "yo", prompt: "Anoche, yo _______ (tocar) la guitarra.", answer: "toqué" },
+      { id: 5, persona: "yo", prompt: "En clase, yo _______ (explicar) mi respuesta.", answer: "expliqué" },
+      { id: 6, persona: "yo", prompt: "Durante el partido, yo _______ (marcar) un gol.", answer: "marqué" },
+      { id: 7, persona: "yo", prompt: "En el juego, yo _______ (atacar) la base rival.", answer: "ataqué" },
+      { id: 8, persona: "yo", prompt: "En el ejercicio, yo _______ (aplicar) la regla nueva.", answer: "apliqué" },
+      { id: 9, persona: "yo", prompt: "El sábado, yo _______ (jugar) al fútbol con mis amigos.", answer: "jugué" },
+      { id: 10, persona: "yo", prompt: "Ayer, yo _______ (llegar) temprano a la escuela.", answer: "llegué" },
+      { id: 11, persona: "yo", prompt: "En la tienda, yo _______ (pagar) con efectivo.", answer: "pagué" },
+      { id: 12, persona: "yo", prompt: "Antes de dormir, yo _______ (apagar) la computadora.", answer: "apagué" },
+      { id: 13, persona: "yo", prompt: "Ayer, yo _______ (entregar) la tarea.", answer: "entregué" },
+      { id: 14, persona: "yo", prompt: "Después del viaje, yo _______ (cargar) las maletas.", answer: "cargué" },
+      { id: 15, persona: "yo", prompt: "Para el proyecto, yo _______ (investigar) sobre los animales.", answer: "investigué" },
+      { id: 16, persona: "yo", prompt: "Durante el viaje, yo _______ (navegar) por internet.", answer: "navegué" },
+      { id: 17, persona: "yo", prompt: "Ayer, yo _______ (empezar) el ejercicio número uno.", answer: "empecé" },
+      { id: 18, persona: "yo", prompt: "El sábado, yo _______ (almorzar) con mi familia.", answer: "almorcé" },
+      { id: 19, persona: "yo", prompt: "En el paso peatonal, yo _______ (cruzar) la calle.", answer: "crucé" },
+      { id: 20, persona: "yo", prompt: "Para el proyecto, yo _______ (organizar) mis apuntes por tema.", answer: "organicé" },
+      { id: 21, persona: "yo", prompt: "En clase, yo _______ (utilizar) el diccionario.", answer: "utilicé" },
+      { id: 22, persona: "yo", prompt: "Al llegar a casa, yo _______ (abrazar) a mi perro.", answer: "abracé" },
+      { id: 23, persona: "yo", prompt: "Para el ensayo, yo _______ (analizar) el poema.", answer: "analicé" },
+      { id: 24, persona: "yo", prompt: "Ayer, yo _______ (comenzar) una novela nueva.", answer: "comencé" },
+      { id: 25, persona: "yo", prompt: "Ayer, yo _______ (hablar) con mi amigo por teléfono.", answer: "hablé" },
+      { id: 26, persona: "yo", prompt: "El sábado, yo _______ (comer) con mis amigos.", answer: "comí" },
+      { id: 27, persona: "yo", prompt: "En 2024, yo _______ (vivir) en un apartamento.", answer: "viví" },
+      { id: 28, persona: "yo", prompt: "Ayer, yo _______ (dormir) ocho horas.", answer: "dormí" },
+      { id: 29, persona: "yo", prompt: "Antes del examen, yo _______ (pedir) ayuda.", answer: "pedí" },
+      { id: 30, persona: "yo", prompt: "Ayer, yo _______ (leer) las instrucciones.", answer: "leí" },
+      { id: 31, persona: "yo", prompt: "El año pasado, yo _______ (ir) al mercado.", answer: "fui" },
+      { id: 32, persona: "yo", prompt: "Durante el paseo, yo _______ (andar) por el centro.", answer: "anduve" },
+      { id: 33, persona: "yo", prompt: "Ayer por la mañana, yo _______ (levantarse) a las seis.", answer: "me levanté" },
+      { id: 34, persona: "yo", prompt: "Antes de salir, yo _______ (afeitarse).", answer: "me afeité" },
+
+      // --- TÚ (35–68) ---
+      { id: 35, persona: "tú", prompt: "Ayer, tú _______ (hablar) con tu amigo.", answer: "hablaste" },
+      { id: 36, persona: "tú", prompt: "El lunes, tú _______ (comer) en la cafetería.", answer: "comiste" },
+      { id: 37, persona: "tú", prompt: "El año pasado, tú _______ (vivir) en otra ciudad.", answer: "viviste" },
+      { id: 38, persona: "tú", prompt: "Durante el verano, tú _______ (trabajar) en una tienda.", answer: "trabajaste" },
+      { id: 39, persona: "tú", prompt: "En la feria, tú _______ (vender) limonada.", answer: "vendiste" },
+      { id: 40, persona: "tú", prompt: "Antes de salir, tú _______ (abrir) la ventana.", answer: "abriste" },
+      { id: 41, persona: "tú", prompt: "Anoche, tú _______ (escribir) un mensaje.", answer: "escribiste" },
+      { id: 42, persona: "tú", prompt: "Durante el almuerzo, tú _______ (compartir) tu comida.", answer: "compartiste" },
+      { id: 43, persona: "tú", prompt: "Después de la escuela, tú _______ (practicar) el piano.", answer: "practicaste" },
+      { id: 44, persona: "tú", prompt: "El sábado, tú _______ (almorzar) con tu familia.", answer: "almorzaste" },
+      { id: 45, persona: "tú", prompt: "En el sofá, tú _______ (dormir) durante la película.", answer: "dormiste" },
+      { id: 46, persona: "tú", prompt: "En clase, tú _______ (pedir) ayuda.", answer: "pediste" },
+      { id: 47, persona: "tú", prompt: "Tú _______ (seguir) las instrucciones.", answer: "seguiste" },
+      { id: 48, persona: "tú", prompt: "Ayer, tú _______ (leer) un capítulo.", answer: "leíste" },
+      { id: 49, persona: "tú", prompt: "Desde tu cuarto, tú _______ (oír) música.", answer: "oíste" },
+      { id: 50, persona: "tú", prompt: "Durante el verano, tú _______ (construir) una casa de madera.", answer: "construiste" },
+      { id: 51, persona: "tú", prompt: "Anoche, tú _______ (acostarse) a las diez.", answer: "te acostaste" },
+      { id: 52, persona: "tú", prompt: "Antes de salir, tú _______ (ducharse) rápidamente.", answer: "te duchaste" },
+      { id: 53, persona: "tú", prompt: "En la reunión, tú _______ (sentarse) cerca de la puerta.", answer: "te sentaste" },
+      { id: 54, persona: "tú", prompt: "Antes del examen, tú _______ (preocuparse) por las instrucciones.", answer: "te preocupaste" },
+      { id: 55, persona: "tú", prompt: "Para la fiesta, tú _______ (maquillarse).", answer: "te maquillaste" },
+      { id: 56, persona: "tú", prompt: "Antes del baile, tú _______ (vestirse) con ropa elegante.", answer: "te vestiste" },
+      { id: 57, persona: "tú", prompt: "Durante el paseo, tú _______ (andar) por el centro.", answer: "anduviste" },
+      { id: 58, persona: "tú", prompt: "El sábado, tú _______ (estar) en casa todo el día.", answer: "estuviste" },
+      { id: 59, persona: "tú", prompt: "Ayer, tú _______ (tener) una idea para el proyecto.", answer: "tuviste" },
+      { id: 60, persona: "tú", prompt: "Durante el partido, tú _______ (poder) marcar un gol.", answer: "pudiste" },
+      { id: 61, persona: "tú", prompt: "En casa, tú _______ (poner) los libros en el escritorio.", answer: "pusiste" },
+      { id: 62, persona: "tú", prompt: "Al final, tú _______ (saber) la respuesta.", answer: "supiste" },
+      { id: 63, persona: "tú", prompt: "Tú _______ (querer) ayudar, pero no tuviste tiempo.", answer: "quisiste" },
+      { id: 64, persona: "tú", prompt: "Ayer, tú _______ (venir) a la escuela en autobús.", answer: "viniste" },
+      { id: 65, persona: "tú", prompt: "Anoche, tú _______ (hacer) la tarea.", answer: "hiciste" },
+      { id: 66, persona: "tú", prompt: "Ayer, tú _______ (decir) la verdad.", answer: "dijiste" },
+      { id: 67, persona: "tú", prompt: "El año pasado, tú _______ (ir) a México.", answer: "fuiste" },
+      { id: 68, persona: "tú", prompt: "En 2024, tú _______ (ser) parte del equipo.", answer: "fuiste" },
+
+      // --- ÉL / ELLA / UD. (69–102) ---
+      { id: 69, persona: "él/ella/Ud.", prompt: "Ayer, ella _______ (leer) las instrucciones.", answer: "leyó" },
+      { id: 70, persona: "él/ella/Ud.", prompt: "El estudiante _______ (creer) la historia.", answer: "creyó" },
+      { id: 71, persona: "él/ella/Ud.", prompt: "En el hielo, él _______ (caer).", answer: "cayó" },
+      { id: 72, persona: "él/ella/Ud.", prompt: "Desde la casa, ella _______ (oír) música.", answer: "oyó" },
+      { id: 73, persona: "él/ella/Ud.", prompt: "Antes de venderla, él _______ (poseer) una colección de monedas.", answer: "poseyó" },
+      { id: 74, persona: "él/ella/Ud.", prompt: "Durante el viaje, él _______ (dormir) en el autobús.", answer: "durmió" },
+      { id: 75, persona: "él/ella/Ud.", prompt: "El profesor _______ (pedir) ayuda a sus estudiantes.", answer: "pidió" },
+      { id: 76, persona: "él/ella/Ud.", prompt: "En la cena, el camarero _______ (servir) la comida a los clientes.", answer: "sirvió" },
+      { id: 77, persona: "él/ella/Ud.", prompt: "Para confirmar la dirección, ella _______ (repetir) la pregunta.", answer: "repitió" },
+      { id: 78, persona: "él/ella/Ud.", prompt: "En el restaurante, él _______ (preferir) sentarse afuera.", answer: "prefirió" },
+      { id: 79, persona: "él/ella/Ud.", prompt: "Después de la sequía, la planta _______ (morir).", answer: "murió" },
+      { id: 80, persona: "él/ella/Ud.", prompt: "Antes del baile, ella _______ (vestirse) con ropa elegante.", answer: "se vistió" },
+      { id: 81, persona: "él/ella/Ud.", prompt: "En la fiesta, el payaso _______ (divertirse).", answer: "se divirtió" },
+      { id: 82, persona: "él/ella/Ud.", prompt: "En el aula, la directora _______ (sentir) mucho frío.", answer: "sintió" },
+      { id: 83, persona: "él/ella/Ud.", prompt: "Durante la entrevista, el testigo _______ (mentir).", answer: "mintió" },
+      { id: 84, persona: "él/ella/Ud.", prompt: "La tormenta _______ (impedir) el partido.", answer: "impidió" },
+      { id: 85, persona: "él/ella/Ud.", prompt: "Para el espectáculo, la diseñadora _______ (vestir) a los bailarines.", answer: "vistió" },
+      { id: 86, persona: "él/ella/Ud.", prompt: "La película _______ (divertir) a los niños.", answer: "divirtió" },
+      { id: 87, persona: "él/ella/Ud.", prompt: "Después de apagar el despertador, ella _______ (despertarse) enseguida.", answer: "se despertó" },
+      { id: 88, persona: "él/ella/Ud.", prompt: "Después de caminar, él _______ (lavarse) las manos.", answer: "se lavó" },
+      { id: 89, persona: "él/ella/Ud.", prompt: "Para la foto, ella _______ (peinarse) frente al espejo.", answer: "se peinó" },
+      { id: 90, persona: "él/ella/Ud.", prompt: "El verano pasado, él _______ (mudarse) a otro barrio.", answer: "se mudó" },
+      { id: 91, persona: "él/ella/Ud.", prompt: "Ayer, ella _______ (tener) una idea para el proyecto.", answer: "tuvo" },
+      { id: 92, persona: "él/ella/Ud.", prompt: "Anoche, él _______ (hacer) la tarea.", answer: "hizo" },
+      { id: 93, persona: "él/ella/Ud.", prompt: "Ayer, ella _______ (decir) la verdad.", answer: "dijo" },
+      { id: 94, persona: "él/ella/Ud.", prompt: "A la fiesta, él _______ (traer) una ensalada.", answer: "trajo" },
+      { id: 95, persona: "él/ella/Ud.", prompt: "El sábado, ella _______ (conducir) hasta la casa de su abuela.", answer: "condujo" },
+      { id: 96, persona: "él/ella/Ud.", prompt: "En clase, él _______ (dar) una respuesta correcta.", answer: "dio" },
+      { id: 97, persona: "él/ella/Ud.", prompt: "Ayer por la noche, ella _______ (ver) una película.", answer: "vio" },
+      { id: 98, persona: "él/ella/Ud.", prompt: "Ayer, ella _______ (hablar) con la profesora.", answer: "habló" },
+      { id: 99, persona: "él/ella/Ud.", prompt: "El sábado, él _______ (comer) con sus amigos.", answer: "comió" },
+      { id: 100, persona: "él/ella/Ud.", prompt: "El año pasado, ella _______ (vivir) en un apartamento.", answer: "vivió" },
+      { id: 101, persona: "él/ella/Ud.", prompt: "Durante el almuerzo, él _______ (compartir) su comida.", answer: "compartió" },
+      { id: 102, persona: "él/ella/Ud.", prompt: "Al final, ella _______ (decidir) participar.", answer: "decidió" },
+
+      // --- ELLOS / ELLAS / UDS. (103–168) ---
+      { id: 103, persona: "ellos/ellas/Uds.", prompt: "Para el proyecto, ellos _______ (proveer) los materiales.", answer: "proveyeron" },
+      { id: 104, persona: "ellos/ellas/Uds.", prompt: "Durante el verano, ellas _______ (construir) una casa.", answer: "construyeron" },
+      { id: 105, persona: "ellos/ellas/Uds.", prompt: "En la historia, ellos _______ (destruir) el puente.", answer: "destruyeron" },
+      { id: 106, persona: "ellos/ellas/Uds.", prompt: "En la escuela, ellas _______ (distribuir) los folletos.", answer: "distribuyeron" },
+      { id: 107, persona: "ellos/ellas/Uds.", prompt: "Con sus consejos, ellos _______ (influir) en la decisión.", answer: "influyeron" },
+      { id: 108, persona: "ellos/ellas/Uds.", prompt: "Las estudiantes _______ (seguir) las instrucciones.", answer: "siguieron" },
+      { id: 109, persona: "ellos/ellas/Uds.", prompt: "En el torneo, ellas _______ (competir) contra otros equipos.", answer: "compitieron" },
+      { id: 110, persona: "ellos/ellas/Uds.", prompt: "Para el equipo, ellos _______ (elegir) a dos capitanes.", answer: "eligieron" },
+      { id: 111, persona: "ellos/ellas/Uds.", prompt: "Después de correr, ellas _______ (sentirse) cansadas.", answer: "se sintieron" },
+      { id: 112, persona: "ellos/ellas/Uds.", prompt: "Después de apagar el despertador, ellos _______ (despertarse) enseguida.", answer: "se despertaron" },
+      { id: 113, persona: "ellos/ellas/Uds.", prompt: "Después del partido, ellas _______ (bañarse) en casa.", answer: "se bañaron" },
+      { id: 114, persona: "ellos/ellas/Uds.", prompt: "Antes de dormir, ellos _______ (cepillarse) los dientes.", answer: "se cepillaron" },
+      { id: 115, persona: "ellos/ellas/Uds.", prompt: "Después de la ducha, ellas _______ (secarse) el pelo.", answer: "se secaron" },
+      { id: 116, persona: "ellos/ellas/Uds.", prompt: "El domingo, ellos _______ (quedarse) en casa.", answer: "se quedaron" },
+      { id: 117, persona: "ellos/ellas/Uds.", prompt: "Al escuchar la noticia, ellas _______ (enojarse).", answer: "se enojaron" },
+      { id: 118, persona: "ellos/ellas/Uds.", prompt: "En la historia, los enemigos _______ (convertirse) en amigos.", answer: "se convirtieron" },
+      { id: 119, persona: "ellos/ellas/Uds.", prompt: "Después de la película, ellos _______ (dormirse) en el sofá.", answer: "se durmieron" },
+      { id: 120, persona: "ellos/ellas/Uds.", prompt: "Ayer, ellos _______ (andar) por el centro durante dos horas.", answer: "anduvieron" },
+      { id: 121, persona: "ellos/ellas/Uds.", prompt: "Durante el partido, ellas _______ (poder) marcar un gol.", answer: "pudieron" },
+      { id: 122, persona: "ellos/ellas/Uds.", prompt: "A la fiesta, ellos _______ (traer) una ensalada.", answer: "trajeron" },
+      { id: 123, persona: "ellos/ellas/Uds.", prompt: "Para la clase, ellas _______ (reducir) el texto a un párrafo.", answer: "redujeron" },
+      { id: 124, persona: "ellos/ellas/Uds.", prompt: "En 2024, ellos _______ (ser) parte del equipo.", answer: "fueron" },
+      { id: 125, persona: "ellos/ellas/Uds.", prompt: "Durante el verano, ellos _______ (trabajar) en un restaurante.", answer: "trabajaron" },
+      { id: 126, persona: "ellos/ellas/Uds.", prompt: "Anoche, ellas _______ (cocinar) pasta para su familia.", answer: "cocinaron" },
+      { id: 127, persona: "ellos/ellas/Uds.", prompt: "El sábado, ellos _______ (bailar) en la fiesta.", answer: "bailaron" },
+      { id: 128, persona: "ellos/ellas/Uds.", prompt: "Durante las vacaciones, ellas _______ (visitar) a sus primos.", answer: "visitaron" },
+      { id: 129, persona: "ellos/ellas/Uds.", prompt: "En clase, ellos _______ (aprender) tres palabras nuevas.", answer: "aprendieron" },
+      { id: 130, persona: "ellos/ellas/Uds.", prompt: "El sábado, ellas _______ (correr) dos millas.", answer: "corrieron" },
+      { id: 131, persona: "ellos/ellas/Uds.", prompt: "Para preparar la sorpresa, ellos _______ (esconder) el regalo en el armario.", answer: "escondieron" },
+      { id: 132, persona: "ellos/ellas/Uds.", prompt: "El año pasado, ellas _______ (vivir) en un apartamento.", answer: "vivieron" },
+      { id: 133, persona: "ellos/ellas/Uds.", prompt: "Durante el almuerzo, ellos _______ (compartir) su comida.", answer: "compartieron" },
+      { id: 134, persona: "ellos/ellas/Uds.", prompt: "El lunes, ellas _______ (estudiar) para el examen.", answer: "estudiaron" },
+      { id: 135, persona: "ellos/ellas/Uds.", prompt: "En la piscina, ellos _______ (nadar) durante una hora.", answer: "nadaron" },
+      { id: 136, persona: "ellos/ellas/Uds.", prompt: "En su ensayo, ustedes _______ (incluir) una cita.", answer: "incluyeron" },
+      { id: 137, persona: "ellos/ellas/Uds.", prompt: "Para la causa, ustedes _______ (contribuir) dinero.", answer: "contribuyeron" },
+      { id: 138, persona: "ellos/ellas/Uds.", prompt: "Para el partido, ustedes _______ (sustituir) al jugador lesionado.", answer: "sustituyeron" },
+      { id: 139, persona: "ellos/ellas/Uds.", prompt: "Al final, ustedes _______ (concluir) el informe.", answer: "concluyeron" },
+      { id: 140, persona: "ellos/ellas/Uds.", prompt: "Durante la clase, ustedes _______ (instruir) a los estudiantes.", answer: "instruyeron" },
+      { id: 141, persona: "ellos/ellas/Uds.", prompt: "Para el proyecto, ustedes _______ (medir) la mesa.", answer: "midieron" },
+      { id: 142, persona: "ellos/ellas/Uds.", prompt: "El artista preguntó si ustedes _______ (convertir) el dibujo en un mural.", answer: "convirtieron" },
+      { id: 143, persona: "ellos/ellas/Uds.", prompt: "En la biblioteca, ustedes _______ (conseguir) los libros que necesitaban.", answer: "consiguieron" },
+      { id: 144, persona: "ellos/ellas/Uds.", prompt: "Antes de salir, ustedes _______ (afeitarse).", answer: "se afeitaron" },
+      { id: 145, persona: "ellos/ellas/Uds.", prompt: "Para la fiesta, ustedes _______ (maquillarse).", answer: "se maquillaron" },
+      { id: 146, persona: "ellos/ellas/Uds.", prompt: "En la reunión, ustedes _______ (sentarse) cerca de la puerta.", answer: "se sentaron" },
+      { id: 147, persona: "ellos/ellas/Uds.", prompt: "Antes del examen, ustedes _______ (preocuparse) por las instrucciones.", answer: "se preocuparon" },
+      { id: 148, persona: "ellos/ellas/Uds.", prompt: "Al final, ustedes _______ (saber) la respuesta.", answer: "supieron" },
+      { id: 149, persona: "ellos/ellas/Uds.", prompt: "Ayer, ustedes _______ (venir) a la escuela en autobús.", answer: "vinieron" },
+      { id: 150, persona: "ellos/ellas/Uds.", prompt: "Anoche, ustedes _______ (hacer) la tarea.", answer: "hicieron" },
+      { id: 151, persona: "ellos/ellas/Uds.", prompt: "Ayer, ustedes _______ (decir) la verdad.", answer: "dijeron" },
+      { id: 152, persona: "ellos/ellas/Uds.", prompt: "El sábado, ustedes _______ (conducir) hasta la casa de su abuela.", answer: "condujeron" },
+      { id: 153, persona: "ellos/ellas/Uds.", prompt: "El lunes, ustedes _______ (estudiar) para el examen.", answer: "estudiaron" },
+      { id: 154, persona: "ellos/ellas/Uds.", prompt: "Ayer, ustedes _______ (hablar) con sus amigos.", answer: "hablaron" },
+      { id: 155, persona: "ellos/ellas/Uds.", prompt: "El sábado, ustedes _______ (comer) en la cafetería.", answer: "comieron" },
+      { id: 156, persona: "ellos/ellas/Uds.", prompt: "El año pasado, ustedes _______ (vivir) en otra ciudad.", answer: "vivieron" },
+      { id: 157, persona: "ellos/ellas/Uds.", prompt: "Durante el verano, ustedes _______ (trabajar) en un restaurante.", answer: "trabajaron" },
+      { id: 158, persona: "ellos/ellas/Uds.", prompt: "En la feria, ustedes _______ (vender) limonada.", answer: "vendieron" },
+      { id: 159, persona: "ellos/ellas/Uds.", prompt: "Antes de salir, ustedes _______ (abrir) la ventana.", answer: "abrieron" },
+      { id: 160, persona: "ellos/ellas/Uds.", prompt: "Anoche, ustedes _______ (escribir) un mensaje.", answer: "escribieron" },
+      { id: 161, persona: "ellos/ellas/Uds.", prompt: "Durante el almuerzo, ustedes _______ (compartir) su comida.", answer: "compartieron" },
+      { id: 162, persona: "ellos/ellas/Uds.", prompt: "El jueves, ustedes _______ (asistir) a una reunión.", answer: "asistieron" },
+      { id: 163, persona: "ellos/ellas/Uds.", prompt: "Ayer, ustedes _______ (cumplir) quince años.", answer: "cumplieron" },
+      { id: 164, persona: "ellos/ellas/Uds.", prompt: "Después de clase, ustedes _______ (subir) las escaleras.", answer: "subieron" },
+      { id: 165, persona: "ellos/ellas/Uds.", prompt: "Ayer, ustedes _______ (recibir) una carta.", answer: "recibieron" },
+      { id: 166, persona: "ellos/ellas/Uds.", prompt: "Anoche, ustedes _______ (cocinar) pasta para su familia.", answer: "cocinaron" },
+      { id: 167, persona: "ellos/ellas/Uds.", prompt: "El sábado, ustedes _______ (correr) dos millas.", answer: "corrieron" },
+      { id: 168, persona: "ellos/ellas/Uds.", prompt: "En la piscina, ustedes _______ (nadar) durante una hora.", answer: "nadaron" },
+
+      // --- NOSOTROS (169–200) ---
+      { id: 169, persona: "nosotros", prompt: "Ayer, nosotros _______ (tener) una idea.", answer: "tuvimos" },
+      { id: 170, persona: "nosotros", prompt: "Durante las vacaciones, nosotros _______ (estar) en México.", answer: "estuvimos" },
+      { id: 171, persona: "nosotros", prompt: "Anoche, nosotros _______ (hacer) la tarea.", answer: "hicimos" },
+      { id: 172, persona: "nosotros", prompt: "En clase, nosotros _______ (decir) la verdad.", answer: "dijimos" },
+      { id: 173, persona: "nosotros", prompt: "En clase, nosotros _______ (dar) una respuesta correcta.", answer: "dimos" },
+      { id: 174, persona: "nosotros", prompt: "Ayer, nosotros _______ (hablar) con nuestros amigos.", answer: "hablamos" },
+      { id: 175, persona: "nosotros", prompt: "Por la tarde, nosotros _______ (caminar) al parque.", answer: "caminamos" },
+      { id: 176, persona: "nosotros", prompt: "Durante el verano, nosotros _______ (trabajar) en una tienda.", answer: "trabajamos" },
+      { id: 177, persona: "nosotros", prompt: "En verano, nosotros _______ (viajar) a México.", answer: "viajamos" },
+      { id: 178, persona: "nosotros", prompt: "El sábado, nosotros _______ (jugar) al fútbol.", answer: "jugamos" },
+      { id: 179, persona: "nosotros", prompt: "El lunes, nosotros _______ (estudiar) para el examen.", answer: "estudiamos" },
+      { id: 180, persona: "nosotros", prompt: "Después de la escuela, nosotros _______ (practicar) el piano.", answer: "practicamos" },
+      { id: 181, persona: "nosotros", prompt: "El sábado, nosotros _______ (comer) en un restaurante.", answer: "comimos" },
+      { id: 182, persona: "nosotros", prompt: "Después de correr, nosotros _______ (beber) agua.", answer: "bebimos" },
+      { id: 183, persona: "nosotros", prompt: "En clase, nosotros _______ (aprender) tres palabras nuevas.", answer: "aprendimos" },
+      { id: 184, persona: "nosotros", prompt: "El sábado, nosotros _______ (correr) dos millas.", answer: "corrimos" },
+      { id: 185, persona: "nosotros", prompt: "En la feria, nosotros _______ (vender) limonada.", answer: "vendimos" },
+      { id: 186, persona: "nosotros", prompt: "El año pasado, nosotros _______ (vivir) en otra ciudad.", answer: "vivimos" },
+      { id: 187, persona: "nosotros", prompt: "Ayer, nosotros _______ (recibir) una carta.", answer: "recibimos" },
+      { id: 188, persona: "nosotros", prompt: "Antes de salir, nosotros _______ (abrir) la ventana.", answer: "abrimos" },
+      { id: 189, persona: "nosotros", prompt: "Anoche, nosotros _______ (escribir) un mensaje.", answer: "escribimos" },
+      { id: 190, persona: "nosotros", prompt: "Durante el almuerzo, nosotros _______ (compartir) nuestra comida.", answer: "compartimos" },
+      { id: 191, persona: "nosotros", prompt: "El jueves, nosotros _______ (asistir) a una reunión.", answer: "asistimos" },
+      { id: 192, persona: "nosotros", prompt: "Al final, nosotros _______ (decidir) participar.", answer: "decidimos" },
+      { id: 193, persona: "nosotros", prompt: "Ayer, nosotros _______ (dormir) ocho horas.", answer: "dormimos" },
+      { id: 194, persona: "nosotros", prompt: "Antes del examen, nosotros _______ (pedir) ayuda.", answer: "pedimos" },
+      { id: 195, persona: "nosotros", prompt: "En la cena, nosotros _______ (servir) la comida.", answer: "servimos" },
+      { id: 196, persona: "nosotros", prompt: "Para confirmar la dirección, nosotros _______ (repetir) la pregunta.", answer: "repetimos" },
+      { id: 197, persona: "nosotros", prompt: "Nosotros _______ (seguir) las instrucciones.", answer: "seguimos" },
+      { id: 198, persona: "nosotros", prompt: "Ayer, nosotros _______ (leer) las instrucciones.", answer: "leímos" },
+      { id: 199, persona: "nosotros", prompt: "Durante el verano, nosotros _______ (construir) una casa.", answer: "construimos" },
+      { id: 200, persona: "nosotros", prompt: "Para el proyecto, nosotros _______ (medir) la mesa.", answer: "medimos" }
+    ];
+
+    /**
+     * ==========================================================================
+     * IN-MEMORY STATE (Safe for sandboxed Schoology iframes without localStorage)
+     * ==========================================================================
+     */
+    const state = {
+      activePersona: "ALL",
+      isShuffled: true,
+      practiceMissedOnly: false,
+      deck: [],
+      currentIndex: 0,
+      // Map of card.id -> { attempts, firstTryCorrect, completed, revealed, lastInput }
+      cardStats: {},
+      currentStreak: 0,
+      bestStreak: 0,
+      cardSolvedOnScreen: false
+    };
+
+    // DOM Element References
+    const dom = {
+      filterTabs: document.getElementById("filterTabs"),
+      btnShuffle: document.getElementById("btnShuffle"),
+      btnPracticeMissed: document.getElementById("btnPracticeMissed"),
+      missedCountBadge: document.getElementById("missedCountBadge"),
+      btnReset: document.getElementById("btnReset"),
+
+      statFirstTryPct: document.getElementById("statFirstTryPct"),
+      statFirstTryFraction: document.getElementById("statFirstTryFraction"),
+      statCompleted: document.getElementById("statCompleted"),
+      statRemaining: document.getElementById("statRemaining"),
+      statStreak: document.getElementById("statStreak"),
+      statBestStreak: document.getElementById("statBestStreak"),
+      statActualScore: document.getElementById("statActualScore"),
+      statActualFraction: document.getElementById("statActualFraction"),
+      progressBarFill: document.getElementById("progressBarFill"),
+      progressBarTrack: document.getElementById("progressBarTrack"),
+
+      flashcardBox: document.getElementById("flashcardBox"),
+      cardPersonaBadge: document.getElementById("cardPersonaBadge"),
+      cardCounterText: document.getElementById("cardCounterText"),
+      cardAttemptBadge: document.getElementById("cardAttemptBadge"),
+      sentenceContainer: document.getElementById("sentenceContainer"),
+      feedbackBanner: document.getElementById("feedbackBanner"),
+
+      btnPrev: document.getElementById("btnPrev"),
+      btnCheck: document.getElementById("btnCheck"),
+      btnReveal: document.getElementById("btnReveal"),
+      btnNext: document.getElementById("btnNext"),
+
+      summaryScreen: document.getElementById("summaryScreen"),
+      summarySubtitle: document.getElementById("summarySubtitle"),
+      summaryPct: document.getElementById("summaryPct"),
+      summaryFirstTryCount: document.getElementById("summaryFirstTryCount"),
+      summaryRetryCount: document.getElementById("summaryRetryCount"),
+      btnSummaryPracticeMissed: document.getElementById("btnSummaryPracticeMissed"),
+      btnSummaryRestart: document.getElementById("btnSummaryRestart")
+    };
+
+    /**
+     * ==========================================================================
+     * UTILITY & STRING NORMALIZATION HELPERS
+     * ==========================================================================
+     */
+    function getCardStat(id) {
+      if (!state.cardStats[id]) {
+        state.cardStats[id] = {
+          attempts: 0,
+          firstTryCorrect: null,
+          completed: false,
+          revealed: false,
+          lastInput: ""
+        };
+      }
+      return state.cardStats[id];
+    }
+
+    function normalizeSpacesAndCase(str) {
+      return str.trim().toLowerCase().replace(/\s+/g, " ");
+    }
+
+    function stripAccents(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    /**
+     * ==========================================================================
+     * DECK MANAGEMENT & FILTERING
+     * ==========================================================================
+     */
+    function buildDeck() {
+      let filtered = ALL_CARDS;
+
+      if (state.practiceMissedOnly) {
+        filtered = ALL_CARDS.filter((c) => {
+          const st = state.cardStats[c.id];
+          return st && st.firstTryCorrect === false;
+        });
+        if (filtered.length === 0) {
+          state.practiceMissedOnly = false;
+          filtered = ALL_CARDS;
+        }
+      } else if (state.activePersona !== "ALL") {
+        filtered = ALL_CARDS.filter((c) => c.persona === state.activePersona);
+      }
+
+      state.deck = state.isShuffled ? shuffleArray(filtered) : [...filtered];
+      state.currentIndex = 0;
+      state.cardSolvedOnScreen = false;
+      hideSummary();
+      renderCurrentCard();
+      updateDashboard();
+    }
+
+    /**
+     * ==========================================================================
+     * RENDERING THE INLINE FILL-IN-THE-BLANK SENTENCE
+     * ==========================================================================
+     */
+    function renderCurrentCard() {
+      if (state.deck.length === 0) return;
+
+      const card = state.deck[state.currentIndex];
+      const st = getCardStat(card.id);
+      state.cardSolvedOnScreen = st.completed;
+
+      // Reset card visual state
+      dom.flashcardBox.classList.remove("state-correct", "state-incorrect");
+      dom.feedbackBanner.className = "feedback-banner";
+      dom.feedbackBanner.textContent = "";
+
+      // Update metadata badges
+      dom.cardPersonaBadge.textContent = `Subject: ${card.persona}`;
+      dom.cardCounterText.textContent = `Card ${state.currentIndex + 1} of ${state.deck.length}`;
+
+      if (st.firstTryCorrect === true) {
+        dom.cardAttemptBadge.className = "badge-attempt mastered-first";
+        dom.cardAttemptBadge.textContent = "✓ First Attempt";
+      } else if (st.attempts > 0) {
+        dom.cardAttemptBadge.className = "badge-attempt retry";
+        dom.cardAttemptBadge.textContent = `Attempt #${st.attempts + (st.completed ? 0 : 1)}`;
+      } else {
+        dom.cardAttemptBadge.className = "badge-attempt first-try";
+        dom.cardAttemptBadge.textContent = "First Attempt";
+      }
+
+      // Parse prompt around "_______" and "(infinitive)"
+      // Expected format: "Ayer, yo _______ (buscar) mi cuaderno."
+      const blankToken = "_______";
+      const blankIdx = card.prompt.indexOf(blankToken);
+
+      dom.sentenceContainer.innerHTML = "";
+
+      if (blankIdx !== -1) {
+        const beforeBlank = card.prompt.slice(0, blankIdx);
+        const afterBlank = card.prompt.slice(blankIdx + blankToken.length);
+
+        const beforeNode = document.createTextNode(beforeBlank);
+        dom.sentenceContainer.appendChild(beforeNode);
+
+        // Inline input box
+        const inputEl = document.createElement("input");
+        inputEl.type = "text";
+        inputEl.id = "answerInput";
+        inputEl.className = "inline-input";
+        inputEl.autocomplete = "off";
+        inputEl.autocorrect = "off";
+        inputEl.autocapitalize = "none";
+        inputEl.spellcheck = false;
+        inputEl.setAttribute("aria-label", "Type the conjugated verb");
+        inputEl.placeholder = "verb...";
+
+        if (st.completed) {
+          inputEl.value = card.answer;
+          inputEl.classList.add("input-correct");
+        } else if (st.lastInput) {
+          inputEl.value = st.lastInput;
+        }
+
+        dom.sentenceContainer.appendChild(inputEl);
+
+        // Highlight the (infinitive) clue right after the input
+        const infMatch = afterBlank.match(/^\s*(\([^)]+\))(.*)$/);
+        if (infMatch) {
+          const infSpan = document.createElement("span");
+          infSpan.className = "verb-infinitive";
+          infSpan.textContent = infMatch[1];
+          dom.sentenceContainer.appendChild(infSpan);
+
+          if (infMatch[2]) {
+            dom.sentenceContainer.appendChild(document.createTextNode(infMatch[2]));
+          }
+        } else {
+          dom.sentenceContainer.appendChild(document.createTextNode(afterBlank));
+        }
+
+        // Attach Enter key listener directly to the input
+        inputEl.addEventListener("keydown", handleInputKeydown);
+        setTimeout(() => inputEl.focus(), 10);
+      } else {
+        // Fallback if a prompt ever lacks _______
+        dom.sentenceContainer.textContent = card.prompt;
+      }
+
+      // If card was already completed earlier in this session, show its solved banner
+      if (st.completed) {
+        dom.flashcardBox.classList.add("state-correct");
+        showFeedback(
+          "success",
+          st.revealed
+            ? `Answer shown: "${card.answer}". Press Next to continue.`
+            : `Correct! "${card.answer}"`
+        );
+      }
+
+      // Update Prev/Next button states
+      dom.btnPrev.disabled = state.currentIndex === 0;
+      dom.btnNext.textContent =
+        state.currentIndex === state.deck.length - 1 ? "Finish ✓" : "Next →";
+    }
+
+    /**
+     * ==========================================================================
+     * SMART SELF-GRADING LOGIC
+     * ==========================================================================
+     */
+    function checkAnswer() {
+      const inputEl = document.getElementById("answerInput");
+      if (!inputEl) return;
+
+      const card = state.deck[state.currentIndex];
+      const st = getCardStat(card.id);
+      const rawUser = inputEl.value;
+      const userClean = normalizeSpacesAndCase(rawUser);
+      const targetClean = normalizeSpacesAndCase(card.answer);
+
+      if (!userClean) {
+        showFeedback("warning", "Please type your conjugation in the blank before checking.");
+        inputEl.focus();
+        return;
+      }
+
+      st.lastInput = rawUser;
+
+      // 1. EXACT MATCH
+      if (userClean === targetClean) {
+        if (st.firstTryCorrect === null) {
+          st.firstTryCorrect = true;
+          state.currentStreak += 1;
+          if (state.currentStreak > state.bestStreak) {
+            state.bestStreak = state.currentStreak;
+          }
+        }
+        st.attempts += 1;
+        st.completed = true;
+        state.cardSolvedOnScreen = true;
+
+        inputEl.value = card.answer;
+        inputEl.classList.remove("input-incorrect");
+        inputEl.classList.add("input-correct");
+        dom.flashcardBox.classList.remove("state-incorrect");
+        dom.flashcardBox.classList.add("state-correct");
+
+        const msg =
+          st.firstTryCorrect
+            ? `¡Excelente! Correct on your first attempt: "${card.answer}"`
+            : `¡Correcto! "${card.answer}"`;
+        showFeedback("success", msg);
+        updateCardBadge(st);
+        updateDashboard();
+        return;
+      }
+
+      // Incorrect submission — record first-try miss if this was attempt #1
+      if (st.firstTryCorrect === null) {
+        st.firstTryCorrect = false;
+        state.currentStreak = 0;
+      }
+      st.attempts += 1;
+      state.cardSolvedOnScreen = false;
+
+      inputEl.classList.remove("input-correct");
+      inputEl.classList.add("input-incorrect");
+      dom.flashcardBox.classList.remove("state-correct");
+      dom.flashcardBox.classList.add("state-incorrect");
+      updateCardBadge(st);
+      updateDashboard();
+
+      // 2. SMART HINT: Letters match, but accent mark is missing or misplaced
+      if (stripAccents(userClean) === stripAccents(targetClean)) {
+        showFeedback(
+          "warning",
+          "Almost! Check your accent marks (á, é, í, ó, ú) and try again."
+        );
+        inputEl.focus();
+        return;
+      }
+
+      // 3. SMART HINT: Missing reflexive pronoun (me, te, se, nos)
+      const reflexivePrefixes = ["me ", "te ", "se ", "nos "];
+      const targetPrefix = reflexivePrefixes.find((p) => targetClean.startsWith(p));
+      if (targetPrefix) {
+        const verbOnly = targetClean.slice(targetPrefix.length);
+        if (
+          userClean === verbOnly ||
+          stripAccents(userClean) === stripAccents(verbOnly)
+        ) {
+          showFeedback(
+            "warning",
+            `Remember the reflexive pronoun (${targetPrefix.trim()}) before the verb!`
+          );
+          inputEl.focus();
+          return;
+        }
+      }
+
+      // 4. GENERAL INCORRECT FEEDBACK
+      showFeedback(
+        "error",
+        "Not quite. Check the subject pronoun and preterite ending, then try again."
+      );
+      inputEl.focus();
+    }
+
+    function revealAnswer() {
+      const card = state.deck[state.currentIndex];
+      const st = getCardStat(card.id);
+      const inputEl = document.getElementById("answerInput");
+      if (!inputEl) return;
+
+      if (st.firstTryCorrect === null) {
+        st.firstTryCorrect = false;
+        state.currentStreak = 0;
+      }
+      st.attempts += 1;
+      st.completed = true;
+      st.revealed = true;
+      state.cardSolvedOnScreen = true;
+
+      inputEl.value = card.answer;
+      inputEl.classList.remove("input-incorrect");
+      inputEl.classList.add("input-correct");
+      dom.flashcardBox.classList.remove("state-incorrect");
+      dom.flashcardBox.classList.add("state-correct");
+
+      showFeedback(
+        "warning",
+        `Answer: <span class="correct-answer-reveal">${card.answer}</span> — Press Next to continue.`
+      );
+      updateCardBadge(st);
+      updateDashboard();
+      inputEl.focus();
+    }
+
+    function updateCardBadge(st) {
+      if (st.firstTryCorrect === true) {
+        dom.cardAttemptBadge.className = "badge-attempt mastered-first";
+        dom.cardAttemptBadge.textContent = "✓ First Attempt";
+      } else {
+        dom.cardAttemptBadge.className = "badge-attempt retry";
+        dom.cardAttemptBadge.textContent = `Attempts: ${st.attempts}`;
+      }
+    }
+
+    function showFeedback(type, htmlMessage) {
+      dom.feedbackBanner.className = `feedback-banner visible ${type}`;
+      dom.feedbackBanner.innerHTML = htmlMessage;
+    }
+
+    /**
+     * ==========================================================================
+     * SPANISH ACCENT INSERTION AT CURSOR POSITION
+     * ==========================================================================
+     */
+    function insertSpanishChar(char) {
+      const inputEl = document.getElementById("answerInput");
+      if (!inputEl) return;
+
+      const start = inputEl.selectionStart ?? inputEl.value.length;
+      const end = inputEl.selectionEnd ?? inputEl.value.length;
+      const currentVal = inputEl.value;
+
+      inputEl.value = currentVal.slice(0, start) + char + currentVal.slice(end);
+      const newCursorPos = start + char.length;
+      inputEl.focus();
+      inputEl.setSelectionRange(newCursorPos, newCursorPos);
+    }
+
+    // Keyboard shortcuts: Enter to Check/Advance, Alt + vowel/n for accents
+    function handleInputKeydown(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (state.cardSolvedOnScreen) {
+          goNext();
+        } else {
+          checkAnswer();
+        }
+        return;
+      }
+
+      if (e.altKey && !e.ctrlKey && !e.metaKey) {
+        const altMap = {
+          a: "á",
+          e: "é",
+          i: "í",
+          o: "ó",
+          u: "ú",
+          n: "ñ",
+          A: "Á",
+          E: "É",
+          I: "Í",
+          O: "Ó",
+          U: "Ú",
+          N: "Ñ"
+        };
+        if (altMap[e.key]) {
+          e.preventDefault();
+          insertSpanishChar(altMap[e.key]);
+        }
+      }
+    }
+
+    /**
+     * ==========================================================================
+     * NAVIGATION & SUMMARY SCREEN
+     * ==========================================================================
+     */
+    function goPrev() {
+      if (state.currentIndex > 0) {
+        state.currentIndex -= 1;
+        renderCurrentCard();
+      }
+    }
+
+    function goNext() {
+      if (state.currentIndex < state.deck.length - 1) {
+        state.currentIndex += 1;
+        renderCurrentCard();
+      } else {
+        showSummary();
+      }
+    }
+
+    function showSummary() {
+      dom.flashcardBox.style.display = "none";
+      dom.summaryScreen.classList.add("visible");
+
+      const deckIds = state.deck.map((c) => c.id);
+      const firstTryWins = deckIds.filter(
+        (id) => state.cardStats[id]?.firstTryCorrect === true
+      ).length;
+      const missedCount = deckIds.length - firstTryWins;
+      const pct =
+        deckIds.length > 0 ? Math.round((firstTryWins / deckIds.length) * 100) : 0;
+
+      dom.summaryPct.textContent = `${pct}%`;
+      dom.summarySubtitle.textContent = `You completed all ${deckIds.length} cards in this set.`;
+      dom.summaryFirstTryCount.textContent = `✅ Correct on 1st attempt: ${firstTryWins}`;
+      dom.summaryRetryCount.textContent = `🔄 Needed extra attempts: ${missedCount}`;
+
+      if (missedCount > 0) {
+        dom.btnSummaryPracticeMissed.style.display = "inline-flex";
+        dom.btnSummaryPracticeMissed.textContent = `🎯 Practice ${missedCount} Missed Card${missedCount === 1 ? "" : "s"}`;
+      } else {
+        dom.btnSummaryPracticeMissed.style.display = "none";
+      }
+    }
+
+    function hideSummary() {
+      dom.summaryScreen.classList.remove("visible");
+      dom.flashcardBox.style.display = "block";
+    }
+
+    /**
+     * ==========================================================================
+     * STATISTICS DASHBOARD UPDATER (ENGLISH LABELS)
+     * ==========================================================================
+     */
+    function updateDashboard() {
+      const allAttemptedIds = Object.keys(state.cardStats).filter(
+        (id) => state.cardStats[id].firstTryCorrect !== null
+      );
+      const firstTryWins = allAttemptedIds.filter(
+        (id) => state.cardStats[id].firstTryCorrect === true
+      ).length;
+      const totalAttempted = allAttemptedIds.length;
+
+      // 1. Score on First Attempt
+      if (totalAttempted === 0) {
+        dom.statFirstTryPct.textContent = "—";
+        dom.statFirstTryFraction.textContent = "0 of 0 attempted";
+      } else {
+        const pct = Math.round((firstTryWins / totalAttempted) * 100);
+        dom.statFirstTryPct.textContent = `${pct}%`;
+        dom.statFirstTryFraction.textContent = `${firstTryWins} of ${totalAttempted} on 1st try`;
+      }
+
+      // 2. Completed
+      const deckTotal = state.deck.length;
+      const deckCompleted = state.deck.filter((c) => getCardStat(c.id).completed).length;
+      const remaining = Math.max(0, deckTotal - deckCompleted);
+
+      dom.statCompleted.textContent = `${deckCompleted} / ${deckTotal}`;
+      dom.statRemaining.textContent = `${remaining} remaining`;
+
+      // 3. Current Streak
+      dom.statStreak.textContent = `${state.currentStreak}`;
+      dom.statBestStreak.textContent = `Best: ${state.bestStreak}`;
+
+      // 4. Actual Score (cards solved by the student without clicking Show Answer)
+      const solvedByUserCount = allAttemptedIds.filter(
+        (id) => state.cardStats[id].completed && !state.cardStats[id].revealed
+      ).length;
+
+      if (totalAttempted === 0) {
+        dom.statActualScore.textContent = "—";
+        dom.statActualFraction.textContent = "0 of 0 correct";
+      } else {
+        const actualPct = Math.round((solvedByUserCount / totalAttempted) * 100);
+        dom.statActualScore.textContent = `${actualPct}%`;
+        dom.statActualFraction.textContent = `${solvedByUserCount} of ${totalAttempted} correct`;
+      }
+
+      // Progress bar
+      const progressPct =
+        deckTotal > 0 ? Math.round((deckCompleted / deckTotal) * 100) : 0;
+      dom.progressBarFill.style.width = `${progressPct}%`;
+      dom.progressBarTrack.setAttribute("aria-valuenow", progressPct);
+
+      // Update Missed Cards button visibility
+      const totalMissedIds = allAttemptedIds.filter(
+        (id) => state.cardStats[id].firstTryCorrect === false
+      );
+      dom.missedCountBadge.textContent = totalMissedIds.length;
+      if (totalMissedIds.length > 0 && !state.practiceMissedOnly) {
+        dom.btnPracticeMissed.style.display = "inline-block";
+      } else if (totalMissedIds.length === 0) {
+        dom.btnPracticeMissed.style.display = "none";
+      }
+    }
+
+    /**
+     * ==========================================================================
+     * EVENT LISTENERS & INITIALIZATION
+     * ==========================================================================
+     */
+    // Subject Filter Tabs
+    dom.filterTabs.addEventListener("click", (e) => {
+      const tab = e.target.closest(".tab-btn");
+      if (!tab) return;
+
+      document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+      tab.classList.add("active");
+
+      state.practiceMissedOnly = false;
+      dom.btnPracticeMissed.classList.remove("active-mode");
+      state.activePersona = tab.dataset.persona;
+      buildDeck();
+    });
+
+    // Shuffle Toggle
+    dom.btnShuffle.addEventListener("click", () => {
+      state.isShuffled = !state.isShuffled;
+      dom.btnShuffle.classList.toggle("active-mode", state.isShuffled);
+      dom.btnShuffle.textContent = state.isShuffled ? "🔀 Shuffle: On" : "🔀 Shuffle: Off";
+      buildDeck();
+    });
+
+    // Practice Missed Mode Toggle
+    function togglePracticeMissed() {
+      state.practiceMissedOnly = !state.practiceMissedOnly;
+      dom.btnPracticeMissed.classList.toggle("active-mode", state.practiceMissedOnly);
+      buildDeck();
+    }
+
+    dom.btnPracticeMissed.addEventListener("click", togglePracticeMissed);
+    dom.btnSummaryPracticeMissed.addEventListener("click", () => {
+      state.practiceMissedOnly = true;
+      dom.btnPracticeMissed.classList.add("active-mode");
+      buildDeck();
+    });
+
+    // Reset All Progress
+    function resetAllProgress() {
+      state.cardStats = {};
+      state.currentStreak = 0;
+      state.bestStreak = 0;
+      state.practiceMissedOnly = false;
+      dom.btnPracticeMissed.classList.remove("active-mode");
+      buildDeck();
+    }
+
+    dom.btnReset.addEventListener("click", resetAllProgress);
+    dom.btnSummaryRestart.addEventListener("click", resetAllProgress);
+
+    // Accent-Mark Helper Buttons
+    document.querySelectorAll(".accent-btn").forEach((btn) => {
+      btn.addEventListener("mousedown", (e) => {
+        // Prevent button from stealing focus from the text input
+        e.preventDefault();
+        insertSpanishChar(btn.dataset.char);
+      });
+    });
+
+    // Card Action Buttons
+    dom.btnPrev.addEventListener("click", goPrev);
+    dom.btnCheck.addEventListener("click", checkAnswer);
+    dom.btnReveal.addEventListener("click", revealAnswer);
+    dom.btnNext.addEventListener("click", goNext);
+
+    // Initialize immediately on load
+    buildDeck();
+  </script>
+</body>
+</html>
